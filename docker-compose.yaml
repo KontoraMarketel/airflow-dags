@@ -80,7 +80,7 @@ x-airflow-common:
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - .airflow/dags:/opt/airflow/dags
+    - ./dags:/opt/airflow/dags
     - /var/run/docker.sock:/var/run/docker.sock
     - airflow-scripts:/opt/airflow/scripts
     - airflow-logs:/opt/airflow/logs
