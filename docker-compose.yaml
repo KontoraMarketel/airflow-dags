@@ -81,10 +81,10 @@ x-airflow-common:
   volumes:
     - .airflow/dags:/opt/airflow/dags
     - /var/run/docker.sock:/var/run/docker.sock
-    - ./airflow-volumes/system/scripts:/opt/airflow/scripts
-    - ./airflow-volumes/system/logs:/opt/airflow/logs
-    - ./airflow-volumes/system/plugins:/opt/airflow/plugins
-    - ./airflow-volumes/system/config:/opt/airflow/config
+    - airflow-scripts:/opt/airflow/scripts
+    - airflow-logs:/opt/airflow/logs
+    - airflow-plugins:/opt/airflow/plugins
+    - airflow-configs:/opt/airflow/config
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -348,7 +348,10 @@ services:
 
 volumes:
   postgres-db-volume:
-
+  airflow-logs:
+  airflow-plugins:
+  airflow-scripts:
+  airflow-configs:
 
 networks:
   global:
