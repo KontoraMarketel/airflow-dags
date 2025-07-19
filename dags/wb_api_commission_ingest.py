@@ -66,7 +66,7 @@ def wb_commision_ingest():
     )
 
     ads_ids = ProduceToTopicOperator(
-        task_id="send_commissions_ingest_task_to_topic",
+        task_id="send_all_ads_ids_ingest_task_to_topic",
         topic="ingest-all-ads-ids-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
