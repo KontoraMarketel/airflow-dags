@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from airflow.decorators import dag
 from airflow.providers.apache.kafka.operators.produce import ProduceToTopicOperator
-from airflow.sdk import Variable
+from airflow.sdk import Variable, task
 
 default_args = {
     "owner": "airflow",
@@ -15,19 +15,11 @@ default_args = {
 }
 
 
-def producer_func(init_date: str):
-    logging.info(f"Kafka producer called with init_date: {init_date}")
-    task_id = str(uuid.uuid4())
+def producer_func(data):
+    logging.info(f"Kafka producer called with data: {data}")
 
-    wb_token = Variable.get("WB_API_TOKEN")  # Make sure this variable exists in Airflow
-
-    value = {
-        "task_id": task_id,
-        "init_date": init_date,
-        "wb_token": wb_token,
-    }
     return [
-        (task_id.encode("utf-8"), json.dumps(value).encode("utf-8"))
+        (data["task_id"].encode("utf-8"), json.dumps(data).encode("utf-8"))
     ]
 
 
@@ -42,12 +34,26 @@ def producer_func(init_date: str):
 def wb_commision_ingest():
     logging.basicConfig(level=logging.INFO)
 
+    @task
+    def generate_producer_data(**context):
+        ts = context['ts']
+        task_id = str(uuid.uuid4())
+        wb_token = Variable.get("WB_API_TOKEN")
+
+        return {
+            "task_id": task_id,
+            "wb_token": wb_token,
+            "ts": ts,
+        }
+
+    payload = generate_producer_data()
+
     commissions = ProduceToTopicOperator(
         task_id="send_commissions_ingest_task_to_topic",
         topic="ingest-commissions-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
-        producer_function_kwargs={"init_date": "{{ ts }}"},
+        producer_function_kwargs={"data": payload},
 
     )
     commissions
