@@ -56,7 +56,18 @@ def wb_commision_ingest():
         producer_function_kwargs={"data": payload},
 
     )
-    commissions
+    fbw_incomes = ProduceToTopicOperator(
+        task_id="send_fbw_incomes_ingest_task_to_topic",
+        topic="ingest-fbw-incomes-tasks",
+        producer_function=producer_func,
+        kafka_config_id="kafka_default",
+        producer_function_kwargs={"data": payload},
+
+    )
+    [
+        commissions,
+        fbw_incomes,
+    ]
 
 
 wb_commision_ingest()
