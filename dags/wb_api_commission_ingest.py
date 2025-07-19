@@ -42,15 +42,15 @@ def producer_func(init_date: str):
 def wb_commision_ingest():
     logging.basicConfig(level=logging.INFO)
 
-    kafka_notifier = ProduceToTopicOperator(
-        task_id="send_ingest_task_to_topic",
-        topic="ingest-tasks",
+    commissions = ProduceToTopicOperator(
+        task_id="send_commissions_ingest_task_to_topic",
+        topic="ingest-commissions-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
         producer_function_kwargs={"init_date": "{{ ts }}"},
 
     )
-    kafka_notifier
+    commissions
 
 
 wb_commision_ingest()
