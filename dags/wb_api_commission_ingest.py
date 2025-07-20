@@ -92,12 +92,22 @@ def wb_commision_ingest():
 
     )
 
+    fbs = ProduceToTopicOperator(
+        task_id="ingest-fbs",
+        topic="ingest-fbs-tasks",
+        producer_function=producer_func,
+        kafka_config_id="kafka_default",
+        producer_function_kwargs={"data": payload},
+
+    )
+
     [
         commissions,
         fbw_incomes,
         ads_ids,
         prices,
         cards,
+        fbs,
     ]
 
 
