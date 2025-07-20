@@ -76,7 +76,7 @@ def wb_commision_ingest():
 
     prices = ProduceToTopicOperator(
         task_id="ingest-prices",
-        topic="ingest-all-ads-ids-tasks",
+        topic="ingest-prices-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
         producer_function_kwargs={"data": payload},
