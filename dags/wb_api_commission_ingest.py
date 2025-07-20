@@ -49,7 +49,7 @@ def wb_commision_ingest():
     payload = generate_producer_data()
 
     commissions = ProduceToTopicOperator(
-        task_id="send_commissions_ingest_task_to_topic",
+        task_id="ingest-commissions",
         topic="ingest-commissions-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
@@ -57,7 +57,7 @@ def wb_commision_ingest():
 
     )
     fbw_incomes = ProduceToTopicOperator(
-        task_id="send_fbw_incomes_ingest_task_to_topic",
+        task_id="ingest-fbw-incomes",
         topic="ingest-fbw-incomes-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
@@ -66,17 +66,28 @@ def wb_commision_ingest():
     )
 
     ads_ids = ProduceToTopicOperator(
-        task_id="send_all_ads_ids_ingest_task_to_topic",
+        task_id="ingest-ads-ids",
         topic="ingest-all-ads-ids-tasks",
         producer_function=producer_func,
         kafka_config_id="kafka_default",
         producer_function_kwargs={"data": payload},
 
     )
+
+    prices = ProduceToTopicOperator(
+        task_id="ingest-prices",
+        topic="ingest-all-ads-ids-tasks",
+        producer_function=producer_func,
+        kafka_config_id="kafka_default",
+        producer_function_kwargs={"data": payload},
+
+    )
+
     [
         commissions,
         fbw_incomes,
         ads_ids,
+        prices,
     ]
 
 
