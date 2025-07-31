@@ -27,7 +27,7 @@ def producer_func(data):
     "wb_ingest",
     default_args=default_args,
     description="Запуск инжеста данных из вб",
-    schedule="0 1 * * *",
+    schedule="0 21 * * *",
     catchup=False,
     tags=["wildberries", "elt", "ingest"],
 )
